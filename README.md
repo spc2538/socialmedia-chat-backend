@@ -16,3 +16,9 @@ psql -h 127.0.0.1 -p 5432 -d socialmedia_chat_database -U spc
 ```bash
 openssl rand -base64 64
 ```
+
+```sql
+UPDATE accounts
+SET role = 'admin'
+WHERE id = 1;
+```

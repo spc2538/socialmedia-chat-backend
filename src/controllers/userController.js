@@ -1,12 +1,11 @@
-// controllers/userController.js
 const pool = require('../db');
 
 exports.me = async (req, res) => {
   try {
     const { rows } = await pool.query(
       `SELECT id, name, lastname, birthdate, phone_number, role, email
-             FROM accounts
-             WHERE id = $1`,
+        FROM accounts
+        WHERE id = $1`,
       [req.user.id]
     );
 

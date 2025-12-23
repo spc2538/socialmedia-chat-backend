@@ -36,3 +36,18 @@ CREATE INDEX idx_chat_messages_created_at
 
 CREATE INDEX idx_chat_messages_sender
     ON chat_messages (sender_id);
+
+CREATE TABLE chat_rooms (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT,
+    is_private BOOLEAN DEFAULT false
+);
+
+CREATE TABLE chat_room_members (
+    room_id BIGINT REFERENCES chat_rooms(id),
+    user_id INTEGER REFERENCES accounts(id),
+    PRIMARY KEY (room_id, user_id)
+);
+
+ALTER TABLE chat_messages
+ADD COLUMN room_id BIGINT REFERENCES chat_rooms(id);

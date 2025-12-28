@@ -86,7 +86,7 @@ components:
 
 
 paths:
-  /register:
+  /auth/register:
     post:
       summary: Create a new user account
       tags: [Auth]
@@ -100,7 +100,7 @@ paths:
         201: { description: Account created successfully. }
         409: { description: Email already in use. }
 
-  /login:
+  /auth/login:
     post:
       summary: Authenticate user and get tokens
       tags: [Auth]
@@ -119,7 +119,7 @@ paths:
                 $ref: '#/components/schemas/TokenResponse'
         401: { description: Invalid credentials. }
 
-  /token:
+  /auth/token:
     post:
       summary: Generate a new access token using a valid refresh token
       tags: [Auth]
@@ -135,7 +135,7 @@ paths:
         200: { description: New access token generated successfully. }
         403: { description: Invalid, expired, or unrecognized refresh token. }
 
-  /logout:
+  /auth/logout:
     delete:
       summary: Log out the current user and invalidate refresh token
       tags: [Auth]
@@ -145,7 +145,7 @@ paths:
         200: { description: Logged out successfully. }
         401: { description: Access denied (No token provided). }
 
-  /me:
+  /users/me:
     get:
       summary: Get data of the current logged user
       tags: [Account]

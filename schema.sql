@@ -1,4 +1,4 @@
-CREATE DATABASE socialmedia_chat_database;
+CREATE DATABASE socialmedia_chat_db;
 CREATE TYPE user_role AS ENUM ('admin', 'standard');
 
 CREATE TABLE accounts (

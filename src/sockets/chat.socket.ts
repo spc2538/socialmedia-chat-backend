@@ -1,27 +1,36 @@
-const chatService = require('../services/chat.service');
+import { Server, Socket } from 'socket.io';
+import * as chatService from '../services/chat.service';
 
-module.exports = (io, socket) => {
-  socket.on('chat:join', async ({ roomId }) => {
+interface JoinRoomPayload {
+  roomId: string;
+}
+
+interface ChatMessagePayload {
+  roomId: string;
+  message: string;
+}
+
+const chatSocket = (io: Server, socket: Socket): void => {
+  socket.on('chat:join', async ({ roomId }: JoinRoomPayload) => {
     try {
       const hasAccess = await chatService.isMember(
         roomId,
         socket.user.id
       );
 
-
       if (!hasAccess) {
-
-        console.log("User:: ");
-        console.log(socket.user);
-        return socket.emit('chat:error', { message: 'Access denied' });
+        console.log('User::', socket.user);
+        socket.emit('chat:error', { message: 'Access denied' });
+        return;
       }
 
       socket.join(`room:${roomId}`);
+
       const messages = await chatService.getRoomMessages(roomId, 50);
 
       socket.emit('chat:history', {
         roomId,
-        messages
+        messages,
       });
     } catch (err) {
       console.error(err);
@@ -29,20 +38,21 @@ module.exports = (io, socket) => {
     }
   });
 
-  socket.on('chat:leave', ({ roomId }) => {
+  socket.on('chat:leave', ({ roomId }: JoinRoomPayload) => {
     socket.leave(`room:${roomId}`);
   });
 
-  socket.on('chat:message', async ({ roomId, message }) => {
+  socket.on('chat:message', async ({ roomId, message }: ChatMessagePayload) => {
     if (!roomId || !message?.trim()) return;
 
     const hasAccess = await chatService.isMember(
       roomId,
-      socket.user.id,
+      socket.user.id
     );
 
     if (!hasAccess) {
-      return socket.emit('chat:error', { message: 'Access denied' });
+      socket.emit('chat:error', { message: 'Access denied' });
+      return;
     }
 
     const saved = await chatService.saveMessage(
@@ -57,7 +67,9 @@ module.exports = (io, socket) => {
       message: saved.content,
       timestamp: saved.created_at,
       roomId,
-      role: socket.user.role
+      role: socket.user.role,
     });
   });
 };
+
+export default chatSocket;

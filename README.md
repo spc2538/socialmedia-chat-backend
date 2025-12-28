@@ -5,8 +5,13 @@ npm init -y
 ```
 
 ```bash
+npm init -y
 npm install socket.io express
 npm install bcrypt cors dotenv ioredis jsonwebtoken pg swagger-ui-express yamljs
+npm install -D typescript ts-node nodemon
+npm install -D @types/node @types/express @types/cors @types/jsonwebtoken
+npm install -D @types/bcrypt @types/pg @types/yamljs @types/swagger-ui-express
+npm install -D @types/socket.io
 ```
 
 ```bash
